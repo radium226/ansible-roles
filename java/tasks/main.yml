@@ -1,0 +1,22 @@
+---
+- name: add APT repository
+  apt_repository:
+    filename: "java"
+    repo: "ppa:webupd8team/java"
+    state: present
+
+- name: accept Oracle license
+  debconf:
+    name: "oracle-java8-installer"
+    question: "shared/accepted-oracle-license-v1-1"
+    value: "true"
+    vtype: "select"
+
+- name: install APT packages
+  apt:
+    package: "{{ item }}"
+    state: installed
+  with_items:
+    - "oracle-java8-installer"
+    - "ca-certificates"
+    - "oracle-java8-set-default"
