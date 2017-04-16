@@ -10,7 +10,7 @@
     consumer_key: "{{ kimsufi_consumer_key }}"
     uri: "/dedicated/server/{{ kimsufi_service_name }}/install/start"
     args:
-      templateName: "Ubuntu"
+      templateName: "{{ kimsufi_template }}"
   register: start_server_installation
   when: "kimsufi_state == 'reinstalled'"
 
