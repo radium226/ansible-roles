@@ -1,0 +1,31 @@
+---
+# We trigger the service installation through the OVH API
+- name: start server installation
+  delegate_to: localhost
+  ovh:
+    method: "post"
+    endpoint: "kimsufi-eu"
+    application_key: "{{ kimsufi_application_key }}"
+    application_secret: "{{ kimsufi_application_secret }}"
+    consumer_key: "{{ kimsufi_consumer_key }}"
+    uri: "/dedicated/server/{{ kimsufi_service_name }}/install/start"
+    args:
+      templateName: "Ubuntu"
+  register: start_server_installation
+  when: "kimsufi_state == 'reinstalled'"
+
+# We wait for the server installation to complete
+- name: wait for server installation
+  delegate_to: localhost
+  action: ovh
+    method="get"
+    endpoint="kimsufi-eu"
+    application_key="{{ kimsufi_application_key }}"
+    application_secret="{{ kimsufi_application_secret }}"
+    consumer_key="{{ kimsufi_consumer_key }}"
+    uri="/dedicated/server/{{ kimsufi_service_name }}/task/{{ start_server_installation.result.taskId }}"
+  register: wait_for_server_installation
+  until: wait_for_server_installation.result.status == 'done'
+  delay: 60
+  retries: 20
+  when: "kimsufi_state == 'reinstalled'"
