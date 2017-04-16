@@ -1,0 +1,19 @@
+#!/bin/bash
+
+declare temp_folder_path="$( mktemp -d )"
+
+# Compress each role into an archive
+find "." -mindepth "1" -maxdepth "1" -type "d" | \
+  grep -vE '(\.git|\.travis\.d)$' | \
+  xargs -I {} basename "{}" | \
+  xargs -I {} /bin/bash -c 'tar -czf "${1}/${0}.tar.gz" -C "./${0}" "."' '{}' "${temp_folder_path}"
+
+# Create GitHub Pages
+cd "${temp_folder_path}"
+git init
+git checkout -b "gh-pages"
+git config user.name "Travis CI"
+git config user.email "none@none.no"
+git add "."
+git commit -m "Deploy to GitHub Pages"
+git push --force "https://radium226:${GITHUB_TOKEN}@github.com/radium226/ansible-roles.git" "gh-pages:gh-pages"
