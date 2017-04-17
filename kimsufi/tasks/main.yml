@@ -27,5 +27,5 @@
   register: wait_for_server_installation
   until: wait_for_server_installation.result.status == 'done'
   delay: 60
-  retries: 30
+  retries: 60
   when: "kimsufi_state == 'reinstalled'"
