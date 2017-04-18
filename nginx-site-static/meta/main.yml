@@ -1,0 +1,4 @@
+---
+dependencies:
+- { role: "nginx-site",
+    nginx_site_domain: "{{ nginx_site_static_domain }}" }

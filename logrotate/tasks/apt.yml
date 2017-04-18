@@ -2,4 +2,3 @@
   apt:
     package: "logrotate"
     state: installed
-  with_items:

@@ -1,0 +1,9 @@
+---
+- name: configure nginx
+  template:
+    src="etc_nginx_sites.d_nginx_site_domain.d_nginx_site_location.conf.j2"
+    dest="/etc/nginx/sites.d/{{ nginx_site_static_domain }}.d/{{ nginx_site_location | default('default') }}.conf"
+    owner="nginx"
+    group="nginx"
+  notify:
+  - reload nginx

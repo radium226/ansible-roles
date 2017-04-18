@@ -1,0 +1,14 @@
+---
+- name: create site folder
+  file:
+    path="/etc/nginx/sites.d/{{ nginx_site_domain }}.d/"
+    state=directory
+
+- name: copy site config file
+  template:
+    src="etc_nginx_sites.d_nginx_site_domain.conf.j2"
+    dest="/etc/nginx/sites.d/{{ nginx_site_domain }}.conf"
+    owner="nginx"
+    group="nginx"
+  notify:
+  - reload nginx

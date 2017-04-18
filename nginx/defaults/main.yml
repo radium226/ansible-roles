@@ -1,0 +1,5 @@
+---
+nginx_http_port: 80
+nginx_https_port: 443
+nginx_default_server_enabled: True
+nginx_default_server_name: "www"

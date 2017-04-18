@@ -1,0 +1,57 @@
+---
+- name: install APT packages
+  apt:
+    package: "{{ item }}"
+    state: installed
+    update_cache: yes
+  with_items:
+  - "nginx"
+  - "apache2-utils"
+
+- name: create user
+  user:
+    name: "nginx"
+    system: yes
+    state: present
+
+- name: start service
+  service:
+    name="nginx"
+    state=started
+    enabled=yes
+
+- name: delete default config folders
+  file:
+    path="{{ item }}"
+    state=absent
+  with_items:
+  - "/etc/nginx/default.d"
+  - "/etc/nginx/sites-available"
+  - "/etc/nginx/sites-enabled"
+  - "/etc/nginx/conf.d"
+  notify:
+  - reload nginx
+
+- name: create config folders
+  file:
+    path="{{ item }}"
+    state=directory
+    owner="nginx"
+    group="nginx"
+  with_items:
+  - "/etc/nginx/sites.d"
+  - "/etc/nginx/upstreams.d"
+  notify:
+  - reload nginx
+
+- name: copy config file
+  template:
+    src="etc_nginx.conf.j2"
+    dest="/etc/nginx/nginx.conf"
+    owner="nginx"
+    group="nginx"
+  notify:
+  - reload nginx
+
+- name: reload if needed
+  meta: flush_handlers

@@ -9,4 +9,5 @@
 
 - name: reload systemd
   systemd:
+    name: "{{ systemd_service_name }}.service"
     daemon_reload: yes

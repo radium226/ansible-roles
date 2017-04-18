@@ -18,10 +18,10 @@
     name: "systemd-timer"
   vars:
     systemd_timer_name: "logrotate"
-    systemd_timer_calendar: "daily"
+    systemd_timer_oncalendar: "daily"
 
-- name: enable systemd service
+- name: enable systemd timer
   systemd:
-    name: "logrotate.service"
+    name: "logrotate.timer"
     state: started
     enabled: yes

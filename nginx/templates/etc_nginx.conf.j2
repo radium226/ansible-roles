@@ -1,0 +1,43 @@
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+
+events {
+    worker_connections 2048;
+}
+
+http {
+
+    # Logging
+    log_format main '$http_x_forwarded_for - $remote_user [$time_local] "$host" "$request" '
+                '$status $body_bytes_sent "$http_referer" '
+                '"$http_user_agent" $request_time';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile             on;
+    tcp_nopush           on;
+    tcp_nodelay          on;
+    keepalive_timeout    65;
+    types_hash_max_size  2048;
+    client_max_body_size 2048M;
+
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+
+    # Include upstreams
+    include /etc/nginx/upstreams.d/*.conf;
+
+    # Include sites
+    include /etc/nginx/sites.d/*.conf;
+
+    {% if nginx_default_server_enabled %}
+    server {
+        listen       {{ nginx_http_port }} default_server;
+        listen       [::]:{{ nginx_http_port }} default_server;
+        server_name  _;
+        return 301  https://{{ nginx_default_server_subdomain }}.{{ nginx_domain}}$request_uri;
+    }
+    {% endif %}
+}

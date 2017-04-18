@@ -1,0 +1,3 @@
+location /{{ (nginx_site_location | default(None) + "/") if nginx_site_location | default(None) else "" }} {
+  root {{ nginx_site_static_root }};
+}
