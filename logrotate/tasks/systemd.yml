@@ -1,0 +1,27 @@
+---
+- name: remove daily cron task
+  file:
+    path: "/etc/cron.daily/logrotate"
+    state: absent
+
+- name: create systemd one-shot service
+  include_role:
+    name: "systemd-service"
+  vars:
+    systemd_service_name: "logrotate"
+    systemd_service_command: |
+      /usr/sbin/logrotate /etc/logrotate.conf
+    systemd_service_type: "oneshot"
+
+- name: create systemd timer
+  include_role:
+    name: "systemd-timer"
+  vars:
+    systemd_timer_name: "logrotate"
+    systemd_timer_calendar: "daily"
+
+- name: enable systemd service
+  systemd:
+    name: "logrotate.service"
+    state: started
+    enabled: yes

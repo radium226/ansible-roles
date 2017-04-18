@@ -1,0 +1,5 @@
+- name: install APT package
+  apt:
+    package: "logrotate"
+    state: installed
+  with_items:

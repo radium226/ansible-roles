@@ -1,0 +1,10 @@
+[Unit]
+Description={{ systemd_service_description }}
+
+[Service]
+Type={{ systemd_service_type }}
+ExecStart={{ systemd_service_command }}
+
+[Install]
+
+WantedBy=multi-user.target
