@@ -1,15 +1,23 @@
 #!/bin/bash
 
-declare temp_folder_path="$( mktemp -d )"
+declare gh_pages_folder_path="$( mktemp -d )"
+
+# Run build scripts
+find "." -mindepth "1" -maxdepth "1" -type "d" | \
+  xargs -I {} /bin/bash -c 'if [[ -f "${0}/.on-build" ]]; then
+    "${0}/.on-build"
+    rm -Rf "${0}/.on-build.d"
+fi' '{}'
 
 # Compress each role into an archive
 find "." -mindepth "1" -maxdepth "1" -type "d" | \
   grep -vE '(\.git|\.travis\.d)$' | \
   xargs -I {} basename "{}" | \
-  xargs -I {} /bin/bash -c 'tar -czf "${1}/${0}.tar.gz" -C "./${0}" "."' '{}' "${temp_folder_path}"
+  xargs -I {} /bin/bash -c 'tar -czf "${1}/${0}.tar.gz" -C "./${0}" "."' '{}' "${gh_pages_folder_path}"
+
 
 # Create GitHub Pages
-cd "${temp_folder_path}"
+cd "${gh_pages_folder_path}"
 git init
 git checkout -b "gh-pages"
 git config user.name "Travis CI"

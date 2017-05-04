@@ -1,0 +1,15 @@
+---
+- name: install UFW's APT package
+  apt:
+    name: "ufw"
+    state: present
+
+- name: allow SSH connections in UFW
+  ufw:
+    rule: "allow"
+    name: "ssh"
+
+- name: deny all other connections in UFW
+  ufw:
+    policy: "reject"
+    state: "enabled"

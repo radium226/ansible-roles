@@ -1,0 +1,26 @@
+---
+- name: create page folder
+  file:
+    path: "/tmp/static"
+    state: directory
+    owner: "nginx"
+    group: "nginx"
+
+- name: copy page files
+  copy:
+    src: "tmp_static_index.html"
+    dest: "/tmp/static/index.html"
+    owner: "nginx"
+    group: "nginx"
+
+- include_role:
+    name: "nginx-site-static"
+  vars:
+    nginx_site_static_domain: "www.{{ private_server_domain }}"
+    nginx_site_static_root: "/tmp/static"
+
+- include_role:
+    name: "nginx-site-static"
+  vars:
+    nginx_site_static_domain: "mmm.{{ private_server_domain }}"
+    nginx_site_static_root: "/tmp/static"
