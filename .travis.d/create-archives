@@ -6,7 +6,7 @@ declare gh_pages_folder_path="$( mktemp -d )"
 find "." -mindepth "1" -maxdepth "1" -type "d" | \
   xargs -I {} /bin/bash -c 'if [[ -f "${0}/.on-build" ]]; then
     cd "${0}"
-    "./.on-build"
+    "./.on-build" || exit 1
     cd -
     rm -Rf "${0}/.on-build.d"
     rm -f "${0}/.on-build"
