@@ -1,0 +1,9 @@
+---
+- name: allow HTTP and HTTPS connections in UFW
+  ufw:
+    rule: "allow"
+    port: "{{ item }}"
+    state: enabled
+  with_items:
+  - "{{ nginx_http_port }}"
+  - "{{ nginx_https_port }}"

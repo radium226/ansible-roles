@@ -7,7 +7,7 @@
 - name: allow SSH connections in UFW
   ufw:
     rule: "allow"
-    name: "ssh"
+    name: "OpenSSH"
 
 - name: deny all other connections in UFW
   ufw:
