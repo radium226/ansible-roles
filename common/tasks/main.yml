@@ -2,6 +2,7 @@
 # UFW
 - include: "ufw.yml"
 
-# Fail2ban
+# fail2ban
+- include: "fail2ban.yml"
 
 # SSH

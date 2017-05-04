@@ -1,0 +1,5 @@
+---
+- name: install fail2ban's APT package
+  apt:
+    name: "fail2ban"
+    state: present
