@@ -3,4 +3,4 @@
   template:
     src: "rclone.conf.j2"
     dest: "{{ rclone_config_file_path }}"
-    mode: "u=rw,g=r,o=r"
+    mode: "u=rw,g=rw,o=rw"
