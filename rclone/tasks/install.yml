@@ -1,0 +1,57 @@
+---
+- name: install APT packages
+  apt:
+    package: "{{ item }}"
+    state: installed
+  with_items:
+  - "unzip"
+  - "man-db"
+
+- name: create temporary folder
+  file:
+    path: "/tmp/rclone"
+    state: directory
+    mode: 0775
+
+- name: download archive
+  unarchive:
+    src: http://downloads.rclone.org/rclone-current-linux-amd64.zip
+    dest: "/tmp/rclone"
+    copy: no
+
+- name: find folder to strip
+  shell: |
+    ls -1 "/tmp/rclone"
+  register: find_folder_to_strip
+  changed_when: False
+
+- name: copy binary
+  copy:
+    src: "/tmp/rclone/{{ find_folder_to_strip.stdout }}/rclone"
+    dest: "/usr/local/bin/rclone"
+    mode: 0755
+    owner: root
+    group: root
+    remote_src: true
+
+- name: create manpage folder
+  file:
+    path: /usr/local/share/man/man1
+    state: directory
+    mode: 0775
+    owner: root
+    group: root
+
+- name: copy manpage
+  copy:
+    src: "/tmp/rclone/{{ find_folder_to_strip.stdout }}/rclone.1"
+    dest: "/usr/local/share/man/man1/rclone.1"
+    mode: 0644
+    owner: root
+    group: root
+    remote_src: true
+
+- name: update manpage
+  shell: |
+    mandb
+  changed_when: False

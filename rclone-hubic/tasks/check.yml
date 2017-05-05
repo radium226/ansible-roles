@@ -1,0 +1,5 @@
+---
+- name: check
+  shell: |
+    rclone --config "{{ rclone_config_file_path }}" cat "{{ rclone_hubic_remote }}/.check" | grep "check"
+  changed_when: False

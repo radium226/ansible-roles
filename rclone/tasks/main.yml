@@ -1,0 +1,9 @@
+---
+- name: check if already installed
+  command: "which rclone"
+  register: which_rclone
+  failed_when: False
+  changed_when: False
+
+- include: "install.yml"
+  when: "which_rclone.rc != 0"

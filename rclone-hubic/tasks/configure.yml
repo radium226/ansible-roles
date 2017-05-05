@@ -1,0 +1,6 @@
+---
+- name: copy configuration file
+  template:
+    src: "rclone.conf.j2"
+    dest: "{{ rclone_config_file_path }}"
+    mode: "u=rw,g=r,o=r"
