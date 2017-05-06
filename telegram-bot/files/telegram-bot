@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+
+import logging
+from telegram.ext import Updater
+import yaml
+import argparse
+
+# Enable logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+
+class TelegramBot:
+
+    def __init__(self, config):
+        self._config = config
+
+    def send_message(self, text):
+        updater = Updater(self._config["token"])
+        updater.bot.sendMessage(chat_id=self._config["chat_id"], text=text)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--config-file", default="/etc/telegram-bot.yml")
+
+    def telegram_bot(args):
+        return TelegramBot(yaml.load(open(args.config_file, "r")))
+
+    subparsers = parser.add_subparsers(dest="action") # this line changed
+    send_message_parser = subparsers.add_parser("send-message")
+    send_message_parser.add_argument("--text")
+
+    def send_message(telegram_bot, args):
+        return telegram_bot.send_message(args.text)
+
+    actions = {
+        "send-message": send_message
+    }
+
+    args = parser.parse_args()
+    actions[args.action](telegram_bot(args), args)

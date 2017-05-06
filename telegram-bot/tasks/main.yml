@@ -1,0 +1,30 @@
+---
+- name: install APT packages
+  apt:
+    package: "{{ item }}"
+    update_cache: yes
+    state: installed
+  with_items:
+  - "python3-pip"
+
+- name: install PIP modules
+  pip:
+    name="{{ item }}"
+    state=present
+    executable="pip3"
+  with_items:
+  - "pyyaml"
+  - "python-telegram-bot"
+
+- name: copy files
+  copy:
+    src: "telegram-bot"
+    dest: "/usr/local/bin/telegram-bot"
+    owner: "root"
+    mode: "u=rwx,g=rx,o=rx"
+
+- name: copy templates
+  template:
+    src: "telegram-bot.yml"
+    dest: "/etc/telegram-bot.yml"
+    mode: "u=rw,g=rw,o=r"
