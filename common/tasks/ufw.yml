@@ -1,13 +1,20 @@
+# https://dodwell.us/security/ufw-fail2ban-portscan.html
 ---
 - name: install UFW's APT package
   apt:
     name: "ufw"
+    update_cache: yes
     state: present
+  notify: restart rsyslog
 
 - name: allow SSH connections in UFW
   ufw:
     rule: "allow"
     name: "OpenSSH"
+
+- name: setup UFW logging level
+  ufw:
+    logging: low
 
 - name: deny all other connections in UFW
   ufw:

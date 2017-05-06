@@ -3,3 +3,45 @@
   apt:
     name: "fail2ban"
     state: present
+    update_cache: yes
+#actionban = ufw deny in from <ip>
+# ufw delete deny in from <ip>
+- name: configure UFW action for fail2ban
+  copy:
+    content: |
+      [Definition]
+      actionstart =
+      actionstop =
+      actioncheck =
+      actionban = ufw insert 1 deny in from <ip> && telegram-bot send-message --text="Je viens de banir l'IP <ip>"
+      actionunban = ufw delete deny in from "<ip>" && telegram-bot send-message --text="L'IP <ip> n'est plus banie !"
+    dest: "/etc/fail2ban/action.d/ufw.conf"
+    owner: "root"
+    mode: "u=rw,g=r,o="
+  notify: restart fail2ban
+
+- name: configure fail2ban filter for port scan using UFW
+  copy:
+    content: |
+      [Definition]
+      failregex = UFW BLOCK.* SRC=<HOST>
+      ignoreregex =
+    dest: "/etc/fail2ban/filter.d/port-scan.conf"
+    owner: "root"
+    mode: "u=rw,g=r,o="
+  notify: restart fail2ban
+
+- name: configure fail2ban jail for UFW
+  copy:
+    content: |
+      [port-scan]
+      bantime = 60
+      enabled = true
+      filter = port-scan
+      logpath = /var/log/ufw.log
+      action = ufw
+      maxretry = 5
+    dest: "/etc/fail2ban/jail.conf"
+    owner: "root"
+    mode: "u=rw,g=r,o="
+  notify: restart fail2ban
