@@ -1,4 +1,7 @@
 ---
+- include_role:
+    name: "nginx"
+
 - name: create page folder
   file:
     path: "/tmp/static"

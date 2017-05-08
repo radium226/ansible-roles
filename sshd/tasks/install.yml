@@ -1,0 +1,14 @@
+- name: install APT packages
+  apt:
+    name: "{{ item }}"
+    state: installed
+    update_cache: yes
+  with_items:
+  - "openssh-server"
+  - "openssh-client"
+
+- name: enable systemd service
+  systemd:
+    name: "sshd"
+    state: started
+    enabled: yes

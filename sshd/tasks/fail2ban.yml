@@ -1,0 +1,13 @@
+---
+- name: create fail2ban jail
+  copy:
+    content: |
+      [sshd]
+      enabled = true
+
+      [sshd-ddos]
+      enabled = true
+    dest: "/etc/fail2ban/jail.d/sshd.local"
+    owner: "root"
+    mode: "u=rw,g=r,o="
+  notify: restart fail2ban

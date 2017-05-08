@@ -1,0 +1,6 @@
+---
+- name: allow connections in ufw
+  ufw:
+    rule: "allow"
+    name: "OpenSSH"
+    state: enabled

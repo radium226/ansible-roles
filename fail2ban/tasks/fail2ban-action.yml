@@ -1,0 +1,40 @@
+---
+- name: create directories for fail2ban-action
+  file:
+    path: /etc/fail2ban-action.d
+    state: directory
+    owner: "root"
+    mode: "u=rw,g=r,o="
+
+- name: copy fail2ban-action file
+  copy:
+    src: "fail2ban-action"
+    dest: "/usr/local/bin/fail2ban-action"
+    owner: "root"
+    mode: "u=rwx,g=rx,o="
+
+- name: create a fail2ban action which use fail2ban-action
+  copy:
+    content : |
+      [Definition]
+      actionstart =
+      actionstop =
+      actioncheck =
+      actionban = fail2ban-action ban <ip>
+      actionunban = fail2ban-action unban <ip>
+    dest: "/etc/fail2ban/action.d/fail2ban-action.local"
+    owner: "root"
+    mode: "u=rw,g=r,o="
+  notify: restart fail2ban
+
+- name: configure fail2ban to use fail2ban-action as default action
+  copy:
+    content: |
+      [DEFAULT]
+      bantime = {{ fail2ban_ban_duration }}
+      action = fail2ban-action
+      maxretry = 5
+    dest: "/etc/fail2ban/jail.d/default.local"
+    owner: "root"
+    mode: "u=rw,g=r,o="
+  notify: restart fail2ban

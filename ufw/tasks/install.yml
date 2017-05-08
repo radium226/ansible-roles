@@ -1,0 +1,13 @@
+---
+- name: install APT package
+  apt:
+    name: "ufw"
+    state: installed
+    update_cache: yes
+  notify: restart rsyslog
+
+- name: enable systemd service
+  systemd:
+    name: "ufw"
+    state: started
+    enabled: yes

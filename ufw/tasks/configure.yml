@@ -1,0 +1,17 @@
+---
+- name: touch log file
+  file:
+    path: "/var/log/ufw.log"
+    state: touch
+    owner: "syslog"
+    group: "adm"
+    mode: "u=rw,g=r,o="
+
+- name: setup logging level
+  ufw:
+    logging: low
+
+- name: deny all connections by default
+  ufw:
+    policy: "reject"
+    state: "enabled"

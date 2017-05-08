@@ -1,0 +1,32 @@
+---
+- name: disallow root login
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+  notify: reload sshd
+
+- name: disallow password authentication
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+  notify: reload sshd
+
+- name: allow only ansible login
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^AllowUsers"
+    line: "AllowUsers ansible"
+    state: present
+  notify: reload sshd
+
+- name: allow only protocol 2
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^Protocol"
+    line: "Protocol 2"
+    state: present
+  notify: reload sshd

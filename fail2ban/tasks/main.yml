@@ -1,0 +1,30 @@
+---
+- name: install APT package
+  apt:
+    name: "fail2ban"
+    state: installed
+    update_cache: yes
+
+- name: enable systemd service
+  systemd:
+    name: "fail2ban"
+    state: started
+    enabled: yes
+
+- include: "fail2ban-action.yml"
+
+- name: add ufw in fail2ban-action
+  copy:
+    content: |
+      #!/bin/bash
+      case "${1}" in
+        "ban")
+          ufw insert 1 deny in from "${2}"
+          ;;
+        "unban")
+          ufw delete deny in from "${2}"
+          ;;
+      esac
+    dest: "/etc/fail2ban-action.d/ufw.conf"
+    owner: "root"
+    mode: "u=rwx,g=rx,o="

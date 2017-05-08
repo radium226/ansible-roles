@@ -1,8 +1,29 @@
 ---
+- name: install APT packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+  - "apt-file"
+  - "ack-grep"
+
+- include_role: "fail2ban"
+
+- include_role: "ufw"
+
+#- name: fix ack install
+#  command: >
+#    dpkg-divert
+#      --local
+#      --divert "/usr/bin/ack"
+#      --rename
+#      --add "/usr/bin/ack-grep"
+
 # UFW
-- include: "ufw.yml"
+#- include: "ufw.yml"
 
 # fail2ban
-- include: "fail2ban.yml"
+#- include: "fail2ban.yml"
 
 # SSH

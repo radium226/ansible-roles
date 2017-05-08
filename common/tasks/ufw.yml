@@ -7,6 +7,15 @@
     state: present
   notify: restart rsyslog
 
+- name: touch /var/log/ufw.log
+  file:
+    path: "var/log/ufw.log"
+    state: touch
+    owner: "syslog"
+    group: "adm"
+    mode: 0555
+    mode: "u=rw,g=r,o="
+
 - name: allow SSH connections in UFW
   ufw:
     rule: "allow"
