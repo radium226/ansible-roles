@@ -6,9 +6,10 @@ main()
 {
   declare action="${1}"
   declare ip="${2}"
+  declare cause=${3-unknown}
   find "/etc/fail2ban-action.d" -type "f" -executable -print0 |
     sort --zero-terminated |
-    xargs --null --no-run-if-empty --replace={} /bin/sh -c '"${0}" "${1}" "${2}"' "{}" "${action}" "${ip}"
+    xargs --null --no-run-if-empty --replace={} /bin/sh -c '"${0}" "${1}" "${2}" "${3}"' "{}" "${action}" "${ip}" "${cause}"
 }
 
 main "${@}"

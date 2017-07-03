@@ -2,14 +2,18 @@
 - name: create fail2ban jail
   copy:
     content: |
-      [sshd]
+      [nginx-http-auth]
       enabled = true
       action = %(action_)s[cause=%(__name__)s]
 
-      [sshd-ddos]
+      [nginx-limit-req]
       enabled = true
       action = %(action_)s[cause=%(__name__)s]
-    dest: "/etc/fail2ban/jail.d/sshd.local"
+
+      [nginx-botsearch]
+      enabled = true
+      action = %(action_)s[cause=%(__name__)s]
+    dest: "/etc/fail2ban/jail.d/nginx.local"
     owner: "root"
     mode: "u=rw,g=r,o="
   notify: restart fail2ban

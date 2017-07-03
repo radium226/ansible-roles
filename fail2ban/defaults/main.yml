@@ -1,2 +1,2 @@
 ---
-fail2ban_ban_duration: 60
+fail2ban_ban_duration: 3600

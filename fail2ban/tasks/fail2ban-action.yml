@@ -20,7 +20,7 @@
       actionstart =
       actionstop =
       actioncheck =
-      actionban = fail2ban-action ban <ip>
+      actionban = fail2ban-action ban <ip> <cause>
       actionunban = fail2ban-action unban <ip>
     dest: "/etc/fail2ban/action.d/fail2ban-action.local"
     owner: "root"
@@ -32,7 +32,7 @@
     content: |
       [DEFAULT]
       bantime = {{ fail2ban_ban_duration }}
-      action = fail2ban-action
+      action_ = fail2ban-action
       maxretry = 5
     dest: "/etc/fail2ban/jail.d/default.local"
     owner: "root"
